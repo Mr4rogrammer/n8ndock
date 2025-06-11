@@ -68,6 +68,5 @@ RUN \
 # Install npm 11.4.1 to fix the vulnerable cross-spawn dependency
 RUN npm install -g npm@11.4.1
 
-ENV SHELL /bin/sh
 USER node
 ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
