@@ -40,4 +40,6 @@ COPY scrape.js /app/scrape.js
 # Revert back to the non-root user used by n8n
 USER node
 
+CMD ["n8n"]
+
 # n8n will run as default CMD from base image
