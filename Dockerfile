@@ -1,6 +1,9 @@
 FROM node:20-slim
 
-# Install system dependencies required for Chromium
+# Set environment variable for Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false
+
+# Install system dependencies for Puppeteer (Chromium)
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -22,17 +25,17 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install n8n and Puppeteer
-RUN npm install -g n8n puppeteer
-
-# Optional: copy your n8n config or data folders
-# COPY ./n8n-config /root/.n8n
-
-# Create work directory
+# Create app directory
 WORKDIR /app
 
-# Add custom Puppeteer scripts (optional)
+# Install n8n and Puppeteer globally
+RUN npm install -g n8n puppeteer
+
+# Copy custom scripts
 COPY scrape.js /app/scrape.js
 
-# Default command: start n8n
+# Expose default n8n port
+EXPOSE 5678
+
+# Start n8n
 CMD ["n8n"]
