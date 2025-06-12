@@ -1,8 +1,9 @@
 FROM n8nio/n8n:latest
 
+# Switch to root before installing system packages and npm packages globally
 USER root
 
-# Install dependencies using Alpine's package manager
+# Install necessary system dependencies
 RUN apk add --no-cache \
     chromium \
     nss \
@@ -13,14 +14,14 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-# Puppeteer needs environment variables for Chromium
+# Set Chromium path for puppeteer to use
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-# Switch back to non-root user (optional for security, or leave as root if needed)
-USER node
+# Install puppeteer globally as root
+RUN npm install -g puppeteer
 
-# Copy your Puppeteer script
+# Copy your script
 COPY scrape.js /app/scrape.js
 
-# Install Puppeteer
-RUN npm install -g puppeteer
+# Optional: Switch back to node for security (or stay as root if needed)
+USER node
