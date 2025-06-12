@@ -1,10 +1,8 @@
-# Start from the official n8n image
 FROM n8nio/n8n:latest
 
-# Switch to root to install packages
 USER root
 
-# Install required dependencies for Puppeteer (Chromium)
+# Install dependencies for Puppeteer & Chromium
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -23,23 +21,19 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxrandr2 \
     xdg-utils \
-    chromium \
+    gnupg \
+    curl \
     --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Puppeteer (ensure it's installed globally)
+# Install Chromium manually (Puppeteer-compatible version)
+RUN apt-get update && apt-get install -y chromium-browser && \
+    ln -s /usr/bin/chromium-browser /usr/bin/chromium
+
+# Install Puppeteer globally
 RUN npm install -g puppeteer
 
-# Optional: Set Puppeteer Chromium path environment variable
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-
-# Create working dir and copy custom script
-WORKDIR /app
+# Add your Puppeteer script if needed
 COPY scrape.js /app/scrape.js
 
-# Revert back to the non-root user used by n8n
 USER node
-
-CMD ["n8n"]
-
-# n8n will run as default CMD from base image
