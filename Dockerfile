@@ -23,4 +23,4 @@ USER node
 COPY scrape.js /app/scrape.js
 
 # Install Puppeteer
-RUN npm install puppeteer
+RUN npm install -g puppeteer
